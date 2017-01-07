@@ -21,18 +21,5 @@ namespace jForum
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.Formatting = Formatting.Indented;
             GlobalConfiguration.Configuration.Formatters.Remove(GlobalConfiguration.Configuration.Formatters.XmlFormatter);
         }
-
-        protected void Application_BeginRequest()
-        {
-            System.Web.HttpContext.Current.SetSessionStateBehavior(System.Web.SessionState.SessionStateBehavior.Required);
-            if (Request.Headers.AllKeys.Contains("Origin") && Request.HttpMethod == "OPTIONS")
-            {
-                Response.Flush();
-            }
-        }
-        protected void Application_PostAuthorizeRequest()
-        {
-            System.Web.HttpContext.Current.SetSessionStateBehavior(System.Web.SessionState.SessionStateBehavior.Required);
-        }
     }
 }
