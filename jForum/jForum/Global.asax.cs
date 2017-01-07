@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Routing;
+using System.Web.SessionState;
 
 namespace jForum
 {
@@ -23,10 +24,15 @@ namespace jForum
 
         protected void Application_BeginRequest()
         {
+            System.Web.HttpContext.Current.SetSessionStateBehavior(System.Web.SessionState.SessionStateBehavior.Required);
             if (Request.Headers.AllKeys.Contains("Origin") && Request.HttpMethod == "OPTIONS")
             {
                 Response.Flush();
             }
+        }
+        protected void Application_PostAuthorizeRequest()
+        {
+            System.Web.HttpContext.Current.SetSessionStateBehavior(System.Web.SessionState.SessionStateBehavior.Required);
         }
     }
 }

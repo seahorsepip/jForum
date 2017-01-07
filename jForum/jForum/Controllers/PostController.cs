@@ -24,17 +24,17 @@ namespace jForum.Controllers
         }
 
         [HttpPost]
-        public PostModel Index(PostModel post)
+        public PostModel Index(PostModel post, string token)
         {
             //Create a new post
-            return repository.Create(post);
+            return repository.Create(post, token);
         }
 
         [HttpDelete]
-        public IHttpActionResult Index(int id)
+        public IHttpActionResult Index(int id, string token)
         {
             //Delete a post
-            if (repository.Delete(id))
+            if (repository.Delete(id, token))
             {
                 return Ok();
             }

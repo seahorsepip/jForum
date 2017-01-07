@@ -10,14 +10,13 @@ namespace jForum.Data
 {
     public class ForumSQLContext : IForumContext
     {
-        static SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
-
         public ForumModel Read(int id)
         {
             ForumModel forum = null;
             int count = 0;
             string query = @"SELECT [Forum].Name, [Forum].Description, [Section].Title
                              FROM [Forum]
+                             LEFT JOIN [Section] ON [Forum].Id = [Section].ForumId
                              WHERE [Forum].Id = @Id;";
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             using (SqlCommand cmd = new SqlCommand(query, conn))

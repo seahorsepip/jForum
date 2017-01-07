@@ -21,15 +21,15 @@ namespace jForum.Logic
             return postContext.Read(topicId, page);
         }
 
-        public PostModel Create(PostModel post)
+        public PostModel Create(PostModel post, string token)
         {
-            post.Id = postContext.Create(post);
+            post.Id = postContext.Create(post, token);
             return post;
         }
 
-        public bool Delete(int id)
+        public bool Delete(int id, string token)
         {
-            return postContext.Delete(id);
+            return postContext.Delete(id, token);
         }
     }
 }

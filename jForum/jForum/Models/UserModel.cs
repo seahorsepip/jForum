@@ -11,6 +11,7 @@ namespace jForum.Models
         string name;
         string email;
         string password;
+
         public int Id
         {
             get

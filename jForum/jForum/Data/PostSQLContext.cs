@@ -10,8 +10,6 @@ namespace jForum.Data
 {
     public class PostSQLContext : IPostContext
     {
-        static SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
-
         public PagedModel Read(int topicId, PagedModel page)
         {
             Dictionary<int, PostModel> posts = new Dictionary<int, PostModel>();
@@ -77,7 +75,7 @@ namespace jForum.Data
             return page;
         }
 
-        public int Create(PostModel post)
+        public int Create(PostModel post, string token)
         {
             int id = 0;
             string query = @"INSERT INTO [Post]
@@ -97,18 +95,27 @@ namespace jForum.Data
             return id;
         }
 
-        public bool Delete(int id)
+        public bool Delete(int id, string token)
         {
             bool success = false;
-            string query = @"DELETE FROM [PostReply]
-                             WHERE PostId = @Id OR ReplyPostId = @Id;
-                             DELETE FROM [Post]
-                             WHERE Id = @Id";
+            string query = @"IF EXISTS(
+                                SELECT *
+                                FROM [User]
+                                JOIN [UserToken] ON [User].Id = [UserToken].UserId AND [UserToken].Token = @Token
+                                JOIN [Post] ON [User].Id = [Post].UserId AND [Post].Id = @Id
+                             )
+                             BEGIN
+                                 DELETE FROM [PostReply]
+                                 WHERE PostId = @Id OR ReplyPostId = @Id;
+                                 DELETE FROM [Post]
+                                 WHERE Id = @Id;
+                             END";
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 conn.Open();
                 cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@Token", token);
                 success = cmd.ExecuteNonQuery() > 0;
             }
             return success;
