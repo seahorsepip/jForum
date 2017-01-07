@@ -7,8 +7,23 @@ namespace jForum.Models
 {
     public class ForumModel
     {
+        int id;
         string name;
         string description;
+        List<SectionModel> sections;
+
+        public int Id
+        {
+            get
+            {
+                return id;
+            }
+
+            set
+            {
+                id = value;
+            }
+        }
 
         public string Name
         {
@@ -33,6 +48,19 @@ namespace jForum.Models
             set
             {
                 description = value;
+            }
+        }
+
+        public List<SectionModel> Sections
+        {
+            get
+            {
+                return sections;
+            }
+
+            set
+            {
+                sections = value;
             }
         }
     }

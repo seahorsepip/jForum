@@ -8,44 +8,37 @@ using jForum.Models;
 using jForum.Data;
 using jForum.Logic;
 using System.Runtime.Serialization;
+using System.Web;
 
 namespace jForum.Controllers
 {
-    //[CollectionDataContract(Name = "posts")]
     public class PostController : ApiController
     {
         PostRepository repository = new PostRepository(new PostSQLContext());
 
-        [Route("api/post")]
         [HttpGet]
-        public List<PostModel> Get()
-        {
-            //Get all posts
-            return repository.Get();
-        }
-
-        [Route("api/post/forum")]
-        [HttpGet]
-        public List<PostModel> Get(ForumModel forum)
-        {
-            //Get all posts in specific forum
-            return repository.Get(forum);
-        }
-
-        [Route("api/post/topic")]
-        [HttpGet]
-        public List<PostModel> Get(TopicModel topic)
+        public PagedModel Index(int id, int start = 0, int stop = int.MaxValue)
         {
             //Get all posts in specific topic
-            return repository.Get(topic);
+            return repository.Read(id, new PagedModel(start, stop));
         }
 
-        [Route("api/post/post")]
-        [HttpGet]
-        public List<PostModel> Get(PostModel post)
+        [HttpPost]
+        public PostModel Index(PostModel post)
         {
-            //Get all posts that quote a specific post
-            return repository.Get(post);
+            //Create a new post
+            return repository.Create(post);
+        }
+
+        [HttpDelete]
+        public IHttpActionResult Index(int id)
+        {
+            //Delete a post
+            if (repository.Delete(id))
+            {
+                return Ok();
+            }
+            return BadRequest("Id not found.");
         }
     }
 }

@@ -7,9 +7,22 @@ namespace jForum.Models
 {
     public class UserModel
     {
+        int id;
         string name;
         string email;
         string password;
+        public int Id
+        {
+            get
+            {
+                return id;
+            }
+
+            set
+            {
+                id = value;
+            }
+        }
 
         public string Name
         {

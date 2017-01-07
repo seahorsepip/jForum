@@ -7,10 +7,24 @@ namespace jForum.Models
 {
     public class SectionModel
     {
+        int id;
         string title;
         string description;
         ForumModel forum;
         List<SectionModel> parentSections;
+
+        public int Id
+        {
+            get
+            {
+                return id;
+            }
+
+            set
+            {
+                id = value;
+            }
+        }
 
         public string Title
         {

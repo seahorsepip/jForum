@@ -11,8 +11,9 @@ namespace jForum.Models
         int id;
         string content;
         UserModel user;
-        List<PostModel> quotes;
+        Dictionary<int, PostModel> quotes;
         DateTime date;
+        TopicModel topic;
 
         public int Id
         {
@@ -53,7 +54,7 @@ namespace jForum.Models
             }
         }
 
-        public List<PostModel> Quotes
+        public Dictionary<int, PostModel> Quotes
         {
             get
             {
@@ -76,6 +77,19 @@ namespace jForum.Models
             set
             {
                 date = value;
+            }
+        }
+
+        public TopicModel Topic
+        {
+            get
+            {
+                return topic;
+            }
+
+            set
+            {
+                topic = value;
             }
         }
     }

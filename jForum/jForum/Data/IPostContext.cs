@@ -8,9 +8,8 @@ namespace jForum.Data
 {
     public interface IPostContext
     {
-        List<PostModel> Get(); //Get all posts
-        List<PostModel> Get(ForumModel forum); //Get all posts in specific forum
-        List<PostModel> Get(TopicModel topic); //Get all posts in specific topic
-        List<PostModel> Get(PostModel post); //Get all posts that quote a specific post
+        PagedModel Read(int topicId, PagedModel page);
+        int Create(PostModel post);
+        bool Delete(int id);
     }
 }

@@ -16,24 +16,20 @@ namespace jForum.Logic
             this.postContext = postContext;
         }
 
-        public List<PostModel> Get()
+        public PagedModel Read(int topicId, PagedModel page)
         {
-            return postContext.Get();
+            return postContext.Read(topicId, page);
         }
 
-        public List<PostModel> Get(PostModel post)
+        public PostModel Create(PostModel post)
         {
-            return postContext.Get(post);
+            post.Id = postContext.Create(post);
+            return post;
         }
 
-        public List<PostModel> Get(TopicModel topic)
+        public bool Delete(int id)
         {
-            return postContext.Get(topic);
-        }
-
-        public List<PostModel> Get(ForumModel forum)
-        {
-            return postContext.Get(forum);
+            return postContext.Delete(id);
         }
     }
 }
