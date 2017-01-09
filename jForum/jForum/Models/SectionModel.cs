@@ -11,7 +11,9 @@ namespace jForum.Models
         string title;
         string description;
         ForumModel forum;
-        List<SectionModel> parentSections;
+        SectionModel parentSection;
+        Dictionary<int, SectionModel> sections;
+        Dictionary<int, TopicModel> topics;
 
         public int Id
         {
@@ -65,16 +67,42 @@ namespace jForum.Models
             }
         }
 
-        public List<SectionModel> ParentSections
+        public SectionModel ParentSection
         {
             get
             {
-                return parentSections;
+                return parentSection;
             }
 
             set
             {
-                parentSections = value;
+                parentSection = value;
+            }
+        }
+
+        public Dictionary<int, SectionModel> Sections
+        {
+            get
+            {
+                return sections;
+            }
+
+            set
+            {
+                sections = value;
+            }
+        }
+
+        public Dictionary<int, TopicModel> Topics
+        {
+            get
+            {
+                return topics;
+            }
+
+            set
+            {
+                topics = value;
             }
         }
     }

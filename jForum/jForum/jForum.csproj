@@ -117,11 +117,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\SectionControler.cs" />
     <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\TopicController.cs" />
     <Compile Include="Controllers\TokenController.cs" />
     <Compile Include="Controllers\PostController.cs" />
+    <Compile Include="Data\SectionSQLContext.cs" />
     <Compile Include="Data\IForumContext.cs" />
+    <Compile Include="Data\ISectionContext.cs" />
     <Compile Include="Data\ITopicContext.cs" />
     <Compile Include="Data\ITokenContext.cs" />
     <Compile Include="Data\IPostContext.cs" />
@@ -133,6 +136,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Logic\Exceptions.cs" />
+    <Compile Include="Logic\SectionRepository.cs" />
     <Compile Include="Logic\ForumRepository.cs" />
     <Compile Include="Logic\TopicRepository.cs" />
     <Compile Include="Logic\TokenRepository.cs" />
