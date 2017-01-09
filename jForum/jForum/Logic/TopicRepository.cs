@@ -25,7 +25,7 @@ namespace jForum.Logic
         public TopicModel Read(int id, PagedModel page)
         {
             TopicModel result = context.Read(id, page);
-            if(result != null)
+            if(result != null && result.Posts.Count >= result.Posts.Start)
             {
                 return result;
             }

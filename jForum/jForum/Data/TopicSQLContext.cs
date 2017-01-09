@@ -194,18 +194,6 @@ namespace jForum.Data
                              )
                              OR [dbo].CheckPermission(@All, @UserId) = 1
                              BEGIN
-                                 DELETE FROM [PostReply]
-                                 WHERE PostId IN (
-                                    SELECT Id
-                                    FROM [Post]
-                                    WHERE TopicId = @Id
-                                 ) OR ReplyPostId IN (
-                                    SELECT Id
-                                    FROM [Post]
-                                    WHERE TopicId = @Id
-                                 )
-                                 DELETE FROM [Post]
-                                 WHERE TopicId = @Id;
                                  DELETE FROM [Topic]
                                  WHERE Id = @Id;
                              END;";

@@ -114,8 +114,6 @@ namespace jForum.Data
                              )
                              OR [dbo].CheckPermission(@All, @UserId) = 1
                              BEGIN
-                                 DELETE FROM [PostReply]
-                                 WHERE PostId = @Id OR ReplyPostId = @Id;
                                  DELETE FROM [Post]
                                  WHERE Id = @Id;
                              END;";
