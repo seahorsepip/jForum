@@ -11,6 +11,7 @@ namespace jForum.Models
         int views;
         bool sticky;
         List<TagModel> tags;
+        PagedModel posts;
         SectionModel section;
 
         public string Title
@@ -62,6 +63,19 @@ namespace jForum.Models
             set
             {
                 tags = value;
+            }
+        }
+
+        public PagedModel Posts
+        {
+            get
+            {
+                return posts;
+            }
+
+            set
+            {
+                posts = value;
             }
         }
 

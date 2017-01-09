@@ -10,112 +10,122 @@ namespace jForum.Data
 {
     public class PostSQLContext : IPostContext
     {
-        public PagedModel Read(int topicId, PagedModel page)
-        {
-            Dictionary<int, PostModel> posts = new Dictionary<int, PostModel>();
-            int count = 0;
-            string query = @"SELECT [Post].Id, [Post].UserId, [Post].TopicId, [Post].Content, [Post].Date, [PostReply].ReplyPostId, Count(*) Over() AS Count
-                             FROM [Post]
-                             LEFT JOIN [PostReply] ON [Post].Id = [PostReply].PostId
-                             WHERE [Post].TopicId = @Id
-                             ORDER BY [Post].Id
-                             OFFSET @Start ROWS
-                             FETCH NEXT (@Stop - @Start) ROWS ONLY;";
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
-            using (SqlCommand cmd = new SqlCommand(query, conn))
-            {
-                conn.Open();
-                cmd.Parameters.AddWithValue("@Id", topicId);
-                cmd.Parameters.AddWithValue("@Start", page.Start);
-                cmd.Parameters.AddWithValue("@Stop", page.Stop);
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    bool first = true;
-                    while (reader.Read())
-                    {
-                        int id = reader.GetInt32(0);
-                        PostModel post;
-                        if (posts.ContainsKey(id))
-                        {
-                            post = posts[id];
-                        }
-                        else
-                        {
-                            post = new PostModel
-                            {
-                                User = new UserModel
-                                {
-                                    Id = reader.GetInt32(1)
-                                },
-                                Topic = new TopicModel
-                                {
-                                    Id = reader.GetInt32(2)
-                                },
-                                Content = reader.GetString(3),
-                                Date = reader.GetDateTime(4),
-                                Quotes = new Dictionary<int, PostModel>()
-                            };
-                        }
-                        if (!reader.IsDBNull(5))
-                        {
-                            post.Quotes.Add(reader.GetInt32(5), null);
-
-                        }
-                        posts[id] = post;
-                        if (first)
-                        {
-                            count = reader.GetInt32(6);
-                            first = false;
-                        }
-                    }
-                }
-            }
-            page.Count = count;
-            page.Data = posts;
-            return page;
-        }
-
-        public int Create(PostModel post, string token)
+        public int Create(PostModel post, int userId)
         {
             int id = 0;
             string query = @"INSERT INTO [Post]
                              (UserId, TopicId, Content, Date)
-                             VALUES(@UserId, @TopicId, @Content, @Date);
+                             VALUES(@UserId, @TopicId, @Content, GETDATE());
                              SELECT SCOPE_IDENTITY();";
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 conn.Open();
-                cmd.Parameters.AddWithValue("@UserId", post.User.Id);
+                cmd.Parameters.AddWithValue("@UserId", userId);
                 cmd.Parameters.AddWithValue("@TopicId", post.Topic.Id);
                 cmd.Parameters.AddWithValue("@Content", post.Content);
-                cmd.Parameters.AddWithValue("@Date", post.Date);
-                id = (int)cmd.ExecuteScalar();
+                id = Convert.ToInt32(cmd.ExecuteScalar());
             }
             return id;
         }
 
-        public bool Delete(int id, string token)
+        public PostModel Read(int id)
         {
-            bool success = false;
-            string query = @"IF EXISTS(
-                                SELECT *
-                                FROM [User]
-                                JOIN [UserToken] ON [User].Id = [UserToken].UserId AND [UserToken].Token = @Token
-                                JOIN [Post] ON [User].Id = [Post].UserId AND [Post].Id = @Id
-                             )
-                             BEGIN
-                                 DELETE FROM [PostReply]
-                                 WHERE PostId = @Id OR ReplyPostId = @Id;
-                                 DELETE FROM [Post]
-                                 WHERE Id = @Id;
-                             END";
+            PostModel post = null;
+            string query = @"SELECT [Post].Content, [Post].Date, [User].Id, [User].Name, [Post].TopicId, [PostReply].ReplyPostId
+                             FROM [Post]
+                             JOIN [User] ON [Post].UserId = [User].Id
+                             LEFT JOIN [PostReply] ON [Post].Id = [PostReply].PostId
+                             WHERE [Post].Id = @Id;";
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 conn.Open();
                 cmd.Parameters.AddWithValue("@Id", id);
-                cmd.Parameters.AddWithValue("@Token", token);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    bool first = true;
+                    while (reader.Read())
+                    {
+                        if (first)
+                        {
+                            post = new PostModel
+                            {
+                                Content = reader.GetString(0),
+                                Date = reader.GetDateTime(1),
+                                User = new UserModel
+                                {
+                                    Id = reader.GetInt32(2),
+                                    Name = reader.GetString(3)
+                                },
+                                Topic = new TopicModel
+                                {
+                                    Id = reader.GetInt32(4)
+                                },
+                                Quotes = new Dictionary<int, PostModel>()
+                            };
+                            first = false;
+                        }
+                        else if (!reader.IsDBNull(5))
+                        {
+                            post.Quotes.Add(reader.GetInt32(5), null);
+
+                        }
+                    }
+                }
+            }
+            return post;
+        }
+
+        public bool Update(PostModel post, int userId)
+        {
+            bool success = false;
+            string query = @"IF EXISTS(
+                                SELECT *
+                                FROM [Post]
+                                WHERE Id = @Id AND UserId = @UserId
+                             )
+                             OR [dbo].CheckPermission(@All, @UserId) = 1
+                             BEGIN
+                                 UPDATE [Post]
+                                 SET Content = @Content
+                                 WHERE Id = @Id
+                             END;";
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                conn.Open();
+                cmd.Parameters.AddWithValue("@Id", post.Id);
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                cmd.Parameters.AddWithValue("@Content", post.Content);
+                cmd.Parameters.AddWithValue("@All", Permission.UPDATE_ALL_POSTS);
+                success = cmd.ExecuteNonQuery() > 0;
+            }
+            return success;
+        }
+
+        public bool Delete(int id, int userId)
+        {
+            bool success = false;
+            string query = @"IF EXISTS(
+                                SELECT *
+                                FROM [Post]
+                                WHERE Id = @Id AND UserId = @UserId
+                             )
+                             OR [dbo].CheckPermission(@All, @UserId) = 1
+                             BEGIN
+                                 DELETE FROM [PostReply]
+                                 WHERE PostId = @Id OR ReplyPostId = @Id;
+                                 DELETE FROM [Post]
+                                 WHERE Id = @Id;
+                             END;";
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                conn.Open();
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                cmd.Parameters.AddWithValue("@All", Permission.DELETE_ALL_POSTS);
                 success = cmd.ExecuteNonQuery() > 0;
             }
             return success;

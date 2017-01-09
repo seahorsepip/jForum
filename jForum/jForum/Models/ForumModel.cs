@@ -10,7 +10,7 @@ namespace jForum.Models
         int id;
         string name;
         string description;
-        List<SectionModel> sections;
+        Dictionary<int, SectionModel> sections;
 
         public int Id
         {
@@ -51,7 +51,7 @@ namespace jForum.Models
             }
         }
 
-        public List<SectionModel> Sections
+        public Dictionary<int, SectionModel> Sections
         {
             get
             {

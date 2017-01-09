@@ -16,29 +16,59 @@ namespace jForum.Controllers
     {
         PostRepository repository = new PostRepository(new PostSQLContext());
 
-        [HttpGet]
-        public PagedModel Index(int id, int start = 0, int stop = int.MaxValue)
-        {
-            //Get all posts in specific topic
-            return repository.Read(id, new PagedModel(start, stop));
-        }
-
         [HttpPost]
-        public PostModel Index(PostModel post, string token)
+        [HttpOptions]
+        [Token(Permission.CREATE_POST)]
+        public IHttpActionResult Create(PostModel post)
         {
             //Create a new post
-            return repository.Create(post, token);
+            return Content(HttpStatusCode.Created, repository.Create(post, (int)Request.Properties["UserId"]));
+        }
+
+        [HttpGet]
+        [HttpOptions]
+        public IHttpActionResult Read(int id)
+        {
+            //Get posts in specific topic
+            try {
+                return Content(HttpStatusCode.OK, repository.Read(id));
+            }
+            catch (NotFoundException)
+            {
+                return BadRequest("No posts found.");
+            }
+        }
+
+        [HttpPut]
+        [HttpOptions]
+        [Token(Permission.UPDATE_POST)]
+        public IHttpActionResult Update(PostModel post)
+        {
+            try
+            {
+                repository.Update(post, (int)Request.Properties["UserId"]);
+                return Ok();
+            }
+            catch (NotFoundException)
+            {
+                return BadRequest("Post does not exist or the user is not the creator of the post and is missing the UPDATE_ALL_POST permission.");
+            }
         }
 
         [HttpDelete]
-        public IHttpActionResult Index(int id, string token)
+        [HttpOptions]
+        [Token(Permission.DELETE_POST)]
+        public IHttpActionResult Delete(int id)
         {
-            //Delete a post
-            if (repository.Delete(id, token))
+            try
             {
+                repository.Delete(id, (int)Request.Properties["UserId"]);
                 return Ok();
             }
-            return BadRequest("Id not found.");
+            catch (NotFoundException)
+            {
+                return BadRequest("Post does not exist or the user is not the creator of the post and is missing the DELETE_ALL_POST permission.");
+            }
         }
     }
 }

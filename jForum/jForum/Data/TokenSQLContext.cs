@@ -8,7 +8,7 @@ using System.Configuration;
 
 namespace jForum.Data
 {
-    public class UserSQLContext : IUserContext
+    public class TokenSQLContext : ITokenContext
     {
         public UserModel Login(string email)
         {
@@ -36,7 +36,7 @@ namespace jForum.Data
             return user;
         }
 
-        public void Token(int id, string token)
+        public void Create(int id, string token)
         {
             string query = @"DELETE FROM [UserToken]
                              WHERE UserId = @UserId;
@@ -53,7 +53,25 @@ namespace jForum.Data
             }
         }
 
-        public bool Token(string token, string newToken)
+        public int Read(string token)
+        {
+            int id = 0;
+            string query = "SELECT [dbo].UserId(@Token);";
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                conn.Open();
+                cmd.Parameters.AddWithValue("@Token", token);
+                object obj = cmd.ExecuteScalar();
+                if (obj != null && DBNull.Value != obj)
+                {
+                    id = Convert.ToInt32(obj);
+                }
+            }
+            return id;
+        }
+
+        public bool Update(string token, string newToken)
         {
             bool valid = false;
             string query = @"UPDATE [UserToken]
@@ -68,6 +86,21 @@ namespace jForum.Data
                 valid = cmd.ExecuteNonQuery() > 0;
             }
             return valid;
+        }
+
+        public bool Permission(Permission permission, int userId)
+        {
+            bool allowed = false;
+            string query = "SELECT [dbo].CheckPermission(@Permission, @UserId);";
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                conn.Open();
+                cmd.Parameters.AddWithValue("@Permission", (int)permission);
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                allowed = (bool)cmd.ExecuteScalar();
+            }
+            return allowed;
         }
     }
 }

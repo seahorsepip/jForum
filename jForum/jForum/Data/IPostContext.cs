@@ -8,8 +8,9 @@ namespace jForum.Data
 {
     public interface IPostContext
     {
-        PagedModel Read(int topicId, PagedModel page);
-        int Create(PostModel post, string token);
-        bool Delete(int id, string token);
+        int Create(PostModel post, int userId);
+        PostModel Read(int id);
+        bool Update(PostModel post, int userId);
+        bool Delete(int id, int userId);
     }
 }

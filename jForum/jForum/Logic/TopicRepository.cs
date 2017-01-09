@@ -7,34 +7,34 @@ using System.Web;
 
 namespace jForum.Logic
 {
-    public class PostRepository
+    public class TopicRepository
     {
-        IPostContext context;
+        ITopicContext context;
 
-        public PostRepository(IPostContext context)
+        public TopicRepository(ITopicContext context)
         {
             this.context = context;
         }
 
-        public PostModel Create(PostModel post, int userId)
+        public TopicModel Create(TopicModel topic, int userId)
         {
-            post.Id = context.Create(post, userId);
-            return post;
+            topic.Id = context.Create(topic, userId);
+            return topic;
         }
 
-        public PostModel Read(int id)
+        public TopicModel Read(int id, PagedModel page)
         {
-            PostModel post = context.Read(id);
-            if(post != null)
+            TopicModel result = context.Read(id, page);
+            if(result != null)
             {
-                return post;
+                return result;
             }
             throw new NotFoundException();
         }
 
-        public void Update(PostModel post, int userId)
+        public void Update(TopicModel topic, int userId)
         {
-            if(!context.Update(post, userId))
+            if(!context.Update(topic, userId))
             {
                 throw new NotFoundException();
             }
