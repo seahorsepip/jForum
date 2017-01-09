@@ -14,8 +14,8 @@ namespace jForum.Data
         {
             int id = 0;
             string query = @"INSERT INTO [Section]
-                             (Title, Description, ParentSectionId)
-                             VALUES(@Title, @Description, @ParentSectionId);
+                             (Title, Description, ForumId, ParentSectionId)
+                             VALUES(@Title, @Description, @ForumId, @ParentSectionId);
                              SELECT SCOPE_IDENTITY();";
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -23,7 +23,8 @@ namespace jForum.Data
                 conn.Open();
                 cmd.Parameters.AddWithValue("@Title", section.Title);
                 cmd.Parameters.AddWithValue("@Description", section.Description);
-                cmd.Parameters.AddWithValue("@ParentSectionId", section.ParentSection);
+                cmd.Parameters.AddWithValue("@ForumId", section.Forum.Id);
+                cmd.Parameters.AddWithValue("@ParentSectionId", section.ParentSection == null ? DBNull.Value : (object)section.ParentSection.Id);
                 id = Convert.ToInt32(cmd.ExecuteScalar());
             }
             return id;
@@ -68,7 +69,7 @@ namespace jForum.Data
                         }
                         if (!reader.IsDBNull(5))
                         {
-                            section.Sections[reader.GetInt32(5)] = new SectionModel
+                            section.Topics[reader.GetInt32(5)] = new TopicModel
                             {
                                 Title = reader.GetString(6)
                             };
@@ -83,15 +84,17 @@ namespace jForum.Data
         {
             bool success = false;
             string query = @"UPDATE [Section]
-                             SET Title = @Title, Description = Description, ParentSectionId = @ParentSectionId
-                             VALUES(@Title, @Description, @ParentSectionId);";
+                             SET Title = @Title, Description = @Description, ForumId = @ForumId, ParentSectionId = @ParentSectionId
+                             WHERE Id = @Id;";
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 conn.Open();
+                cmd.Parameters.AddWithValue("@Id", section.Id);
                 cmd.Parameters.AddWithValue("@Title", section.Title);
                 cmd.Parameters.AddWithValue("@Description", section.Description);
-                cmd.Parameters.AddWithValue("@ParentSectionId", section.ParentSection);
+                cmd.Parameters.AddWithValue("@ForumId", section.Forum.Id);
+                cmd.Parameters.AddWithValue("@ParentSectionId", section.ParentSection == null ? DBNull.Value : (object)section.ParentSection.Id);
                 success = cmd.ExecuteNonQuery() > 0;
             }
             return success;

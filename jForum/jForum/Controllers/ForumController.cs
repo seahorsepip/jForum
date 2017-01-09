@@ -22,7 +22,13 @@ namespace jForum.Controllers
         public IHttpActionResult Create(ForumModel forum)
         {
             //Create a new forum
-            return Content(HttpStatusCode.Created, repository.Create(forum));
+            try {
+                return Content(HttpStatusCode.Created, repository.Create(forum));
+            }
+            catch (InvalidValueException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet]
@@ -68,6 +74,10 @@ namespace jForum.Controllers
             catch (NotFoundException)
             {
                 return NotFound();
+            }
+            catch (InvalidValueException e)
+            {
+                return BadRequest(e.Message);
             }
         }
 

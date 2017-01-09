@@ -16,8 +16,15 @@ namespace jForum.Logic
             this.context = context;
         }
 
+        void Validate(ForumModel forum)
+        {
+            new ValidateString(forum.Name, 3, 50, "Forum name");
+            new ValidateString(forum.Description, 10, 200, "Forum description");
+        }
+
         public ForumModel Create(ForumModel forum)
         {
+            Validate(forum);
             forum.Id = context.Create(forum);
             return forum;
         }
@@ -44,6 +51,11 @@ namespace jForum.Logic
 
         public void Update(ForumModel forum)
         {
+            Validate(forum);
+            if(forum.Id == 0)
+            {
+                throw new InvalidValueException("Forum id is missing.");
+            }
             if (!context.Update(forum))
             {
                 throw new NotFoundException();

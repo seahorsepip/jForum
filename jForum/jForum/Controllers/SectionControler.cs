@@ -26,6 +26,7 @@ namespace jForum.Controllers
         }
 
         [HttpGet]
+        [HttpOptions]
         public IHttpActionResult Read(int id)
         {
             //Get a specific section and it's sections and topics, no token required since it's public

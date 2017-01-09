@@ -141,6 +141,7 @@
     <Compile Include="Logic\TopicRepository.cs" />
     <Compile Include="Logic\TokenRepository.cs" />
     <Compile Include="Logic\PostRepository.cs" />
+    <Compile Include="Logic\ValidateString.cs" />
     <Compile Include="Models\ForumModel.cs" />
     <Compile Include="Models\GroupModel.cs" />
     <Compile Include="Models\PagedModel.cs" />

@@ -22,7 +22,14 @@ namespace jForum.Controllers
         public IHttpActionResult Create(PostModel post)
         {
             //Create a new post
-            return Content(HttpStatusCode.Created, repository.Create(post, (int)Request.Properties["UserId"]));
+            try
+            {
+                return Content(HttpStatusCode.Created, repository.Create(post, (int)Request.Properties["UserId"]));
+            }
+            catch(InvalidValueException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet]
@@ -35,7 +42,7 @@ namespace jForum.Controllers
             }
             catch (NotFoundException)
             {
-                return BadRequest("No posts found.");
+                return NotFound();
             }
         }
 
@@ -51,7 +58,11 @@ namespace jForum.Controllers
             }
             catch (NotFoundException)
             {
-                return BadRequest("Post does not exist or the user is not the creator of the post and is missing the UPDATE_ALL_POST permission.");
+                return NotFound();
+            }
+            catch (InvalidValueException e)
+            {
+                return BadRequest(e.Message);
             }
         }
 
@@ -67,7 +78,7 @@ namespace jForum.Controllers
             }
             catch (NotFoundException)
             {
-                return BadRequest("Post does not exist or the user is not the creator of the post and is missing the DELETE_ALL_POST permission.");
+                return NotFound();
             }
         }
     }
