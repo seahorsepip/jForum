@@ -14,8 +14,8 @@ namespace jForum.Models
         [Required, MinLength(5), MaxLength(200)]
         public string Description { get; set; }
         [Required]
-        public ForumModel Forum { get; set; }
-        public SectionModel ParentSection { get; set; }
+        public int ForumId { get; set; }
+        public int ParentSectionId { get; set; }
         public Dictionary<int, SectionModel> Sections { get; set; }
         public Dictionary<int, TopicModel> Topics { get; set; }
     }

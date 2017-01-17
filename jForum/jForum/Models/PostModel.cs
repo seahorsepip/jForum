@@ -15,6 +15,7 @@ namespace jForum.Models
         public UserModel User { get; set; }
         public Dictionary<int, PostModel> Quotes { get; set; }
         public DateTime Date { get; set; }
-        public TopicModel Topic { get; set; }
+        [Required]
+        public int TopicId { get; set; }
     }
 }

@@ -17,11 +17,11 @@ namespace jForum.Controllers
     {
         TokenRepository repository = new TokenRepository(new TokenSQLContext());
         
-        public IHttpActionResult Post(UserModel user)
+        public IHttpActionResult Post(string email, string password)
         {
             try
             {
-                return Content(HttpStatusCode.Created, repository.Create(user));
+                return Content(HttpStatusCode.Created, repository.Create(email, password));
             }
             catch (InvalidModelException e)
             {

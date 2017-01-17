@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -7,32 +8,22 @@ namespace jForum.Models
 {
     public class GroupModel
     {
-        string name;
-        string description;
-
-        public string Name
-        {
+        public int Id { get; set; }
+        [Required]
+        public int ForumId { get; set; }
+        [Required, MinLength(3), MaxLength(50)]
+        public string Name { get; set; }
+        [Required, MinLength(5), MaxLength(200)]
+        public string Description { get; set; }
+        List<Permission> permissions;
+        public List<Permission> Permissions {
             get
             {
-                return name;
+                return permissions;
             }
-
             set
             {
-                name = value;
-            }
-        }
-
-        public string Description
-        {
-            get
-            {
-                return description;
-            }
-
-            set
-            {
-                description = value;
+                permissions = value.Distinct().ToList();
             }
         }
     }

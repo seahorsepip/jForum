@@ -18,10 +18,6 @@ namespace jForum.Logic
 
         public PostModel Create(PostModel post, int userId)
         {
-            if (post.Topic == null  || post.Topic.Id == 0)
-            {
-                throw new InvalidModelException("post.Topic.Id", "The Id field is required.");
-            }
             post.Id = context.Create(post, userId);
             return post;
         }

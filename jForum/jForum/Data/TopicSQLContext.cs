@@ -26,7 +26,7 @@ namespace jForum.Data
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 conn.Open();
-                cmd.Parameters.AddWithValue("@SectionId", topic.Section.Id);
+                cmd.Parameters.AddWithValue("@SectionId", topic.SectionId);
                 cmd.Parameters.AddWithValue("@Title", topic.Title);
                 cmd.Parameters.AddWithValue("@UserId", userId);
                 cmd.Parameters.AddWithValue("@Content", topic.Content);
@@ -171,7 +171,7 @@ namespace jForum.Data
             {
                 conn.Open();
                 cmd.Parameters.AddWithValue("@Id", topic.Id);
-                cmd.Parameters.AddWithValue("@SectionId", topic.Section.Id);
+                cmd.Parameters.AddWithValue("@SectionId", topic.SectionId);
                 cmd.Parameters.AddWithValue("@Content", topic.Content);
                 cmd.Parameters.AddWithValue("@Title", topic.Title);
                 cmd.Parameters.AddWithValue("@All", Permission.UPDATE_ALL_TOPIC);

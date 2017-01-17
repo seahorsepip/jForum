@@ -18,10 +18,6 @@ namespace jForum.Logic
 
         public TopicModel Create(TopicModel topic, int userId)
         {
-            if(topic.Section == null || topic.Section.Id == 0)
-            {
-                throw new InvalidModelException("topic.Section.Id", "The Id field is required");
-            }
             topic.Id = context.Create(topic, userId);
             return topic;
         }

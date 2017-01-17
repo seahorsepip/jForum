@@ -22,7 +22,7 @@ namespace jForum.Data
             {
                 conn.Open();
                 cmd.Parameters.AddWithValue("@UserId", userId);
-                cmd.Parameters.AddWithValue("@TopicId", post.Topic.Id);
+                cmd.Parameters.AddWithValue("@TopicId", post.TopicId);
                 cmd.Parameters.AddWithValue("@Content", post.Content);
                 id = Convert.ToInt32(cmd.ExecuteScalar());
             }
@@ -58,10 +58,7 @@ namespace jForum.Data
                                     Id = reader.GetInt32(2),
                                     Name = reader.GetString(3)
                                 },
-                                Topic = new TopicModel
-                                {
-                                    Id = reader.GetInt32(4)
-                                },
+                                TopicId = reader.GetInt32(4),
                                 Quotes = new Dictionary<int, PostModel>()
                             };
                             first = false;

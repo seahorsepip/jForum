@@ -23,8 +23,8 @@ namespace jForum.Data
                 conn.Open();
                 cmd.Parameters.AddWithValue("@Title", section.Title);
                 cmd.Parameters.AddWithValue("@Description", section.Description);
-                cmd.Parameters.AddWithValue("@ForumId", section.Forum.Id);
-                cmd.Parameters.AddWithValue("@ParentSectionId", section.ParentSection == null ? DBNull.Value : (object)section.ParentSection.Id);
+                cmd.Parameters.AddWithValue("@ForumId", section.ForumId);
+                cmd.Parameters.AddWithValue("@ParentSectionId", section.ParentSectionId == 0 ? DBNull.Value : (object)section.ParentSectionId);
                 id = Convert.ToInt32(cmd.ExecuteScalar());
             }
             return id;
@@ -93,8 +93,8 @@ namespace jForum.Data
                 cmd.Parameters.AddWithValue("@Id", section.Id);
                 cmd.Parameters.AddWithValue("@Title", section.Title);
                 cmd.Parameters.AddWithValue("@Description", section.Description);
-                cmd.Parameters.AddWithValue("@ForumId", section.Forum.Id);
-                cmd.Parameters.AddWithValue("@ParentSectionId", section.ParentSection == null ? DBNull.Value : (object)section.ParentSection.Id);
+                cmd.Parameters.AddWithValue("@ForumId", section.ForumId);
+                cmd.Parameters.AddWithValue("@ParentSectionId", section.ParentSectionId == 0 ? DBNull.Value : (object)section.ParentSectionId);
                 success = cmd.ExecuteNonQuery() > 0;
             }
             return success;

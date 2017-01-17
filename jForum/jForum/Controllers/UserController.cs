@@ -12,49 +12,50 @@ using System.Web;
 
 namespace jForum.Controllers
 {
-    public class ForumController : ApiController
+    public class UserController : ApiController
     {
-        ForumRepository repository = new ForumRepository(new ForumSQLContext());
+        UserRepository repository = new UserRepository(new UserSQLContext());
         
-        [Token(Permission.CREATE_FORUM)]
-        public IHttpActionResult Post(ForumModel forum)
+        public IHttpActionResult Post(UserModel user)
         {
-            //Create a new forum
-            return Content(HttpStatusCode.Created, repository.Create(forum));
+            //Create a new user
+            try
+            {
+                return Content(HttpStatusCode.Created, repository.Create(user));
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (InvalidModelException e)
+            {
+                ModelState.AddModelError(e.Key, e.Value);
+                return BadRequest(ModelState);
+            }
         }
-        
+
+        [Token]
         public IHttpActionResult Get()
         {
-            //Get all forums
-            try {
-                return Content(HttpStatusCode.OK, repository.Read());
+            //Get current user
+            try
+            {
+                return Content(HttpStatusCode.OK, repository.Read((int)Request.Properties["UserId"]));
             }
             catch (NotFoundException)
             {
                 return NotFound();
             }
         }
-        
-        public IHttpActionResult Get(int id)
+
+        [Token]
+        public IHttpActionResult Put(UserModel user)
         {
-            //Get a specific forum and it's sections
+            //Update current user
             try
             {
-                return Content(HttpStatusCode.OK, repository.Read(id));
-            }
-            catch (NotFoundException)
-            {
-                return NotFound();
-            }
-        }
-        
-        [Token(Permission.UPDATE_FORUM)]
-        public IHttpActionResult Put(ForumModel forum)
-        {
-            //Update a specific forum
-            try
-            {
-                repository.Update(forum);
+                user.Id = (int)Request.Properties["UserId"];
+                repository.Update(user);
                 return Ok();
             }
             catch (NotFoundException)
@@ -68,13 +69,20 @@ namespace jForum.Controllers
             }
         }
         
-        [Token(Permission.DELETE_FORUM)]
+        [Token]
+        public IHttpActionResult Delete()
+        {
+            //Delete current user
+            return Delete((int)Request.Properties["UserId"]);
+        }
+
+        [Token]
         public IHttpActionResult Delete(int id)
         {
-            //Delete a forum
+            //Delete a user
             try
             {
-                repository.Delete(id);
+                repository.Delete(id, (int)Request.Properties["UserId"]);
                 return Ok();
             }
             catch (NotFoundException)

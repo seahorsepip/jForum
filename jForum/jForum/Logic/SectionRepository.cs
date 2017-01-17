@@ -18,10 +18,6 @@ namespace jForum.Logic
 
         public SectionModel Create(SectionModel section)
         {
-            if (section.Forum == null || section.Forum.Id == 0)
-            {
-                throw new InvalidModelException("section.Forum.Id", "The Id field is required.");
-            }
             section.Id = context.Create(section);
             return section;
         }
@@ -41,10 +37,6 @@ namespace jForum.Logic
             if (section.Id == 0)
             {
                 throw new InvalidModelException("section.Id", "The Id field is required.");
-            }
-            if (section.Forum == null || section.Forum.Id == 0)
-            {
-                throw new InvalidModelException("section.Forum.Id", "The Id field is required.");
             }
             if (!context.Update(section))
             {

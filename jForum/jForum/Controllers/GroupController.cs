@@ -12,20 +12,32 @@ using System.Web;
 
 namespace jForum.Controllers
 {
-    public class ForumController : ApiController
+    public class GroupController : ApiController
     {
-        ForumRepository repository = new ForumRepository(new ForumSQLContext());
+        GroupRepository repository = new GroupRepository(new GroupSQLContext());
         
-        [Token(Permission.CREATE_FORUM)]
-        public IHttpActionResult Post(ForumModel forum)
+        [Token(Permission.CREATE_GROUP)]
+        public IHttpActionResult Post(GroupModel group)
         {
-            //Create a new forum
-            return Content(HttpStatusCode.Created, repository.Create(forum));
+            //Create a new group
+            try
+            {
+                return Content(HttpStatusCode.Created, repository.Create(group));
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (InvalidModelException e)
+            {
+                ModelState.AddModelError(e.Key, e.Value);
+                return BadRequest(ModelState);
+            }
         }
         
         public IHttpActionResult Get()
         {
-            //Get all forums
+            //Get all groups
             try {
                 return Content(HttpStatusCode.OK, repository.Read());
             }
@@ -37,7 +49,7 @@ namespace jForum.Controllers
         
         public IHttpActionResult Get(int id)
         {
-            //Get a specific forum and it's sections
+            //Get a specific group
             try
             {
                 return Content(HttpStatusCode.OK, repository.Read(id));
@@ -48,13 +60,13 @@ namespace jForum.Controllers
             }
         }
         
-        [Token(Permission.UPDATE_FORUM)]
-        public IHttpActionResult Put(ForumModel forum)
+        [Token(Permission.UPDATE_GROUP)]
+        public IHttpActionResult Put(GroupModel group)
         {
-            //Update a specific forum
+            //Update a specific group
             try
             {
-                repository.Update(forum);
+                repository.Update(group);
                 return Ok();
             }
             catch (NotFoundException)
@@ -68,10 +80,10 @@ namespace jForum.Controllers
             }
         }
         
-        [Token(Permission.DELETE_FORUM)]
+        [Token(Permission.DELETE_GROUP)]
         public IHttpActionResult Delete(int id)
         {
-            //Delete a forum
+            //Delete a group
             try
             {
                 repository.Delete(id);

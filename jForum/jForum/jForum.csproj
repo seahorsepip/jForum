@@ -43,6 +43,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CryptSharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CryptSharpOfficial.2.1.0.0\lib\CryptSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -117,11 +121,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\SectionController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\TopicController.cs" />
     <Compile Include="Controllers\TokenController.cs" />
     <Compile Include="Controllers\PostController.cs" />
+    <Compile Include="Data\GroupSQLContext.cs" />
+    <Compile Include="Data\IGroupContext.cs" />
+    <Compile Include="Data\IUserContext.cs" />
+    <Compile Include="Data\UserSQLContext.cs" />
     <Compile Include="Data\SectionSQLContext.cs" />
     <Compile Include="Data\IForumContext.cs" />
     <Compile Include="Data\ISectionContext.cs" />
@@ -136,6 +146,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Logic\Exceptions.cs" />
+    <Compile Include="Logic\GroupRepository.cs" />
+    <Compile Include="Logic\UserRepository.cs" />
     <Compile Include="Logic\SectionRepository.cs" />
     <Compile Include="Logic\ForumRepository.cs" />
     <Compile Include="Logic\TopicRepository.cs" />

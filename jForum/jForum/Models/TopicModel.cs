@@ -15,6 +15,6 @@ namespace jForum.Models
         public List<TagModel> Tags { get; set; }
         public PagedModel Posts { get; set; }
         [Required]
-        public SectionModel Section { get; set; }
+        public int SectionId { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
 using jForum.Models;
+using CryptSharp;
 
 namespace jForum.Logic
 {
@@ -27,14 +28,14 @@ namespace jForum.Logic
             return token;
         }
 
-        public string Create(UserModel user)
+        public string Create(string email, string password)
         {
             string token = null;
-            UserModel u = context.Login(user.Email);
-            if (u != null && u.Password == user.Password)
+            UserModel user = context.Login(email);
+            if (user != null && Crypter.CheckPassword(password, user.Password))
             {
                 token = Generate();
-                context.Create(u.Id, token);
+                context.Create(user.Id, token);
                 return token;
             }
             throw new InvalidModelException("user.Email", "Invalid email and/or password.");
