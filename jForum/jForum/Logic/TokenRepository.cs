@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
+using jForum.Models;
 
 namespace jForum.Logic
 {
@@ -58,9 +59,12 @@ namespace jForum.Logic
             throw new InvalidTokenException();
         }
 
-        public bool Permission(Permission permission, int userId)
+        public void Permission(Permission permission, int userId)
         {
-            return context.Permission(permission, userId);
+            if(permission != Models.Permission.NONE && !context.Permission(permission, userId))
+            {
+                throw new InvalidTokenException();
+            }
         }
     }
 }

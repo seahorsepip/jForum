@@ -54,7 +54,7 @@ namespace jForum.Logic
             Validate(forum);
             if(forum.Id == 0)
             {
-                throw new InvalidValueException("Forum id is missing.");
+                throw new InvalidModelException("Forum id is missing.");
             }
             if (!context.Update(forum))
             {

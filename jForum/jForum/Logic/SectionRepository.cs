@@ -22,7 +22,7 @@ namespace jForum.Logic
             new ValidateString(section.Description, 10, 200, "Section description");
             if (section.Forum == null || section.Forum.Id == 0)
             {
-                throw new InvalidValueException("Section forum id is missing");
+                throw new InvalidModelException("Section forum id is missing");
             }
         }
 
@@ -48,7 +48,7 @@ namespace jForum.Logic
             Validate(section);
             if(section.Id == 0)
             {
-                throw new InvalidValueException("Section id is missing");
+                throw new InvalidModelException("Section id is missing");
             }
             if (!context.Update(section))
             {

@@ -26,7 +26,7 @@ namespace jForum.Logic
             Validate(post);
             if (post.Topic == null  || post.Topic.Id == 0)
             {
-                throw new InvalidValueException("Post topic id is missing.");
+                throw new InvalidModelException("Post topic id is missing.");
             }
             post.Id = context.Create(post, userId);
             return post;
@@ -47,7 +47,7 @@ namespace jForum.Logic
             Validate(post);
             if (post.Id == 0)
             {
-                throw new InvalidValueException("Post id is missing.");
+                throw new InvalidModelException("Post id is missing.");
             }
             if (!context.Update(post, userId))
             {

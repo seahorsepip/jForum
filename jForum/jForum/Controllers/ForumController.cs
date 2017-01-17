@@ -25,7 +25,7 @@ namespace jForum.Controllers
             try {
                 return Content(HttpStatusCode.Created, repository.Create(forum));
             }
-            catch (InvalidValueException e)
+            catch (InvalidModelException e)
             {
                 return BadRequest(e.Message);
             }
@@ -75,7 +75,7 @@ namespace jForum.Controllers
             {
                 return NotFound();
             }
-            catch (InvalidValueException e)
+            catch (InvalidModelException e)
             {
                 return BadRequest(e.Message);
             }

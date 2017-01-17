@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -7,89 +8,13 @@ namespace jForum.Models
 {
     public class TopicModel : PostModel
     {
-        string title;
-        int views;
-        bool sticky;
-        List<TagModel> tags;
-        PagedModel posts;
-        SectionModel section;
-
-        public string Title
-        {
-            get
-            {
-                return title;
-            }
-
-            set
-            {
-                title = value;
-            }
-        }
-
-        public int Views
-        {
-            get
-            {
-                return views;
-            }
-
-            set
-            {
-                views = value;
-            }
-        }
-
-        public bool Sticky
-        {
-            get
-            {
-                return sticky;
-            }
-
-            set
-            {
-                sticky = value;
-            }
-        }
-
-        public List<TagModel> Tags
-        {
-            get
-            {
-                return tags;
-            }
-
-            set
-            {
-                tags = value;
-            }
-        }
-
-        public PagedModel Posts
-        {
-            get
-            {
-                return posts;
-            }
-
-            set
-            {
-                posts = value;
-            }
-        }
-
-        public SectionModel Section
-        {
-            get
-            {
-                return section;
-            }
-
-            set
-            {
-                section = value;
-            }
-        }
+        [Required, MinLength(3), MaxLength(50)]
+        public string Title { get; set; }
+        public int Views { get; set; }
+        public bool Sticky { get; set; }
+        public List<TagModel> Tags { get; set; }
+        public PagedModel Posts { get; set; }
+        [Required]
+        public SectionModel Section { get; set; }
     }
 }

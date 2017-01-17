@@ -21,10 +21,9 @@ namespace jForum
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "{controller}/{action}",
+                routeTemplate: "{controller}/{id}",
                 defaults: new {
-                    id = RouteParameter.Optional,
-                    action = "Index"
+                    id = RouteParameter.Optional
                 }
             );
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json"));

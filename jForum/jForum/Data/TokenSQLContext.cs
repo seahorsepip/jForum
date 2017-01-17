@@ -56,7 +56,7 @@ namespace jForum.Data
         public int Read(string token)
         {
             int id = 0;
-            string query = "SELECT [dbo].UserId(@Token);";
+            string query = @"SELECT [dbo].UserId(@Token);";
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
