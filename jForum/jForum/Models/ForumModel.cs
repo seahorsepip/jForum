@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -7,61 +8,11 @@ namespace jForum.Models
 {
     public class ForumModel
     {
-        int id;
-        string name;
-        string description;
-        Dictionary<int, SectionModel> sections;
-
-        public int Id
-        {
-            get
-            {
-                return id;
-            }
-
-            set
-            {
-                id = value;
-            }
-        }
-
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-
-            set
-            {
-                name = value;
-            }
-        }
-
-        public string Description
-        {
-            get
-            {
-                return description;
-            }
-
-            set
-            {
-                description = value;
-            }
-        }
-
-        public Dictionary<int, SectionModel> Sections
-        {
-            get
-            {
-                return sections;
-            }
-
-            set
-            {
-                sections = value;
-            }
-        }
+        public int Id { get; set; }
+        [Required, MinLength(3), MaxLength(50)]
+        public string Name { get; set; }
+        [Required, MinLength(5), MaxLength(200)]
+        public string Description { get; set; }
+        public Dictionary<int, SectionModel> Sections { get; set; }
     }
 }

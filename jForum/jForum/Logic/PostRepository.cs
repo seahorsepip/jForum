@@ -16,17 +16,11 @@ namespace jForum.Logic
             this.context = context;
         }
 
-        void Validate(PostModel post)
-        {
-            new ValidateString(post.Content, 10, 2000, "Post content");
-        }
-
         public PostModel Create(PostModel post, int userId)
         {
-            Validate(post);
             if (post.Topic == null  || post.Topic.Id == 0)
             {
-                throw new InvalidModelException("Post topic id is missing.");
+                throw new InvalidModelException("post.Topic.Id", "The Id field is required.");
             }
             post.Id = context.Create(post, userId);
             return post;
@@ -44,10 +38,9 @@ namespace jForum.Logic
 
         public void Update(PostModel post, int userId)
         {
-            Validate(post);
             if (post.Id == 0)
             {
-                throw new InvalidModelException("Post id is missing.");
+                throw new InvalidModelException("post.Id", "The Id field is required.");
             }
             if (!context.Update(post, userId))
             {

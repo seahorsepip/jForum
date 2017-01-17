@@ -20,11 +20,7 @@ namespace jForum.Logic
         {
             if(topic.Section == null || topic.Section.Id == 0)
             {
-                throw new InvalidModelException
-                {
-                    Key = "topic.Section.Id",
-                    Value = "The Id field is required"
-                };
+                throw new InvalidModelException("topic.Section.Id", "The Id field is required");
             }
             topic.Id = context.Create(topic, userId);
             return topic;

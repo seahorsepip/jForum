@@ -27,16 +27,17 @@ namespace jForum.Logic
             return token;
         }
 
-        public string Create(string email, string password)
+        public string Create(UserModel user)
         {
             string token = null;
-            UserModel user = context.Login(email);
-            if (user != null && user.Password == password)
+            UserModel u = context.Login(user.Email);
+            if (u != null && u.Password == user.Password)
             {
                 token = Generate();
-                context.Create(user.Id, token);
+                context.Create(u.Id, token);
+                return token;
             }
-            return token;
+            throw new InvalidModelException("user.Email", "Invalid email and/or password.");
         }
 
         public int Read(string token)

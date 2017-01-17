@@ -15,11 +15,9 @@ namespace jForum.Controllers
     public class PostController : ApiController
     {
         PostRepository repository = new PostRepository(new PostSQLContext());
-
-        [HttpPost]
-        [HttpOptions]
+        
         [Token(Permission.CREATE_POST)]
-        public IHttpActionResult Create(PostModel post)
+        public IHttpActionResult Post(PostModel post)
         {
             //Create a new post
             try
@@ -28,15 +26,14 @@ namespace jForum.Controllers
             }
             catch(InvalidModelException e)
             {
-                return BadRequest(e.Message);
+                ModelState.AddModelError(e.Key, e.Value);
+                return BadRequest(ModelState);
             }
         }
-
-        [HttpGet]
-        [HttpOptions]
-        public IHttpActionResult Read(int id)
+        
+        public IHttpActionResult Get(int id)
         {
-            //Get posts in specific topic
+            //Get a specific post
             try {
                 return Content(HttpStatusCode.OK, repository.Read(id));
             }
@@ -45,11 +42,9 @@ namespace jForum.Controllers
                 return NotFound();
             }
         }
-
-        [HttpPut]
-        [HttpOptions]
+        
         [Token(Permission.UPDATE_POST)]
-        public IHttpActionResult Update(PostModel post)
+        public IHttpActionResult Put(PostModel post)
         {
             try
             {
@@ -62,12 +57,11 @@ namespace jForum.Controllers
             }
             catch (InvalidModelException e)
             {
-                return BadRequest(e.Message);
+                ModelState.AddModelError(e.Key, e.Value);
+                return BadRequest(ModelState);
             }
         }
-
-        [HttpDelete]
-        [HttpOptions]
+        
         [Token(Permission.DELETE_POST)]
         public IHttpActionResult Delete(int id)
         {

@@ -15,19 +15,23 @@ namespace jForum.Controllers
     public class SectionController : ApiController
     {
         SectionRepository repository = new SectionRepository(new SectionSQLContext());
-
-        [HttpPost]
-        [HttpOptions]
+        
         [Token(Permission.CREATE_SECTION)]
-        public IHttpActionResult Create(SectionModel section)
+        public IHttpActionResult Post(SectionModel section)
         {
             //Create a new forum
-            return Content(HttpStatusCode.Created, repository.Create(section));
+            try
+            {
+                return Content(HttpStatusCode.Created, repository.Create(section));
+            }
+            catch (InvalidModelException e)
+            {
+                ModelState.AddModelError(e.Key, e.Value);
+                return BadRequest(ModelState);
+            }
         }
-
-        [HttpGet]
-        [HttpOptions]
-        public IHttpActionResult Read(int id)
+        
+        public IHttpActionResult Get(int id)
         {
             //Get a specific section and it's sections and topics, no token required since it's public
             try
@@ -39,11 +43,9 @@ namespace jForum.Controllers
                 return NotFound();
             }
         }
-
-        [HttpPut]
-        [HttpOptions]
+        
         [Token(Permission.UPDATE_SECTION)]
-        public IHttpActionResult Update(SectionModel section)
+        public IHttpActionResult Put(SectionModel section)
         {
             //Update a specific section
             try
@@ -55,10 +57,13 @@ namespace jForum.Controllers
             {
                 return NotFound();
             }
+            catch (InvalidModelException e)
+            {
+                ModelState.AddModelError(e.Key, e.Value);
+                return BadRequest(ModelState);
+            }
         }
-
-        [HttpDelete]
-        [HttpOptions]
+        
         [Token(Permission.DELETE_SECTION)]
         public IHttpActionResult Delete(int id)
         {

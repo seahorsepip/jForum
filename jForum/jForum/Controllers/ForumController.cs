@@ -15,26 +15,15 @@ namespace jForum.Controllers
     public class ForumController : ApiController
     {
         ForumRepository repository = new ForumRepository(new ForumSQLContext());
-
-        [HttpPost]
-        [HttpOptions]
+        
         [Token(Permission.CREATE_FORUM)]
-        public IHttpActionResult Create(ForumModel forum)
+        public IHttpActionResult Post(ForumModel forum)
         {
             //Create a new forum
-            try {
-                return Content(HttpStatusCode.Created, repository.Create(forum));
-            }
-            catch (InvalidModelException e)
-            {
-                return BadRequest(e.Message);
-            }
+            return Content(HttpStatusCode.Created, repository.Create(forum));
         }
-
-        [HttpGet]
-        [HttpOptions]
-        [Token(Permission.READ_FORUM)]
-        public IHttpActionResult Read()
+        
+        public IHttpActionResult Get()
         {
             //Get all forums
             try {
@@ -45,9 +34,8 @@ namespace jForum.Controllers
                 return NotFound();
             }
         }
-
-        [HttpGet]
-        public IHttpActionResult Read(int id)
+        
+        public IHttpActionResult Get(int id)
         {
             //Get a specific forum and it's sections, no token required since it's public
             try
@@ -59,11 +47,9 @@ namespace jForum.Controllers
                 return NotFound();
             }
         }
-
-        [HttpPut]
-        [HttpOptions]
+        
         [Token(Permission.UPDATE_FORUM)]
-        public IHttpActionResult Update(ForumModel forum)
+        public IHttpActionResult Put(ForumModel forum)
         {
             //Update a specific forum
             try
@@ -77,12 +63,11 @@ namespace jForum.Controllers
             }
             catch (InvalidModelException e)
             {
-                return BadRequest(e.Message);
+                ModelState.AddModelError(e.Key, e.Value);
+                return BadRequest(ModelState);
             }
         }
-
-        [HttpDelete]
-        [HttpOptions]
+        
         [Token(Permission.DELETE_FORUM)]
         public IHttpActionResult Delete(int id)
         {

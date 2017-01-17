@@ -16,19 +16,12 @@ namespace jForum.Logic
             this.context = context;
         }
 
-        void Validate(SectionModel section)
-        {
-            new ValidateString(section.Title, 3, 50, "Section title");
-            new ValidateString(section.Description, 10, 200, "Section description");
-            if (section.Forum == null || section.Forum.Id == 0)
-            {
-                throw new InvalidModelException("Section forum id is missing");
-            }
-        }
-
         public SectionModel Create(SectionModel section)
         {
-            Validate(section);
+            if (section.Forum == null || section.Forum.Id == 0)
+            {
+                throw new InvalidModelException("section.Forum.Id", "The Id field is required.");
+            }
             section.Id = context.Create(section);
             return section;
         }
@@ -45,10 +38,13 @@ namespace jForum.Logic
 
         public void Update(SectionModel section)
         {
-            Validate(section);
-            if(section.Id == 0)
+            if (section.Id == 0)
             {
-                throw new InvalidModelException("Section id is missing");
+                throw new InvalidModelException("section.Id", "The Id field is required.");
+            }
+            if (section.Forum == null || section.Forum.Id == 0)
+            {
+                throw new InvalidModelException("section.Forum.Id", "The Id field is required.");
             }
             if (!context.Update(section))
             {

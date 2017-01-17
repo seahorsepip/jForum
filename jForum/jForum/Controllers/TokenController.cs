@@ -16,17 +16,22 @@ namespace jForum.Controllers
     public class TokenController : ApiController
     {
         TokenRepository repository = new TokenRepository(new TokenSQLContext());
-
-        [HttpPost]
-        public IHttpActionResult Create(UserModel user)
+        
+        public IHttpActionResult Post(UserModel user)
         {
-            return Content(HttpStatusCode.Created, repository.Create(user.Email, user.Password));
+            try
+            {
+                return Content(HttpStatusCode.Created, repository.Create(user));
+            }
+            catch (InvalidModelException e)
+            {
+                ModelState.AddModelError(e.Key, e.Value);
+                return BadRequest(ModelState);
+            }
         }
-
-        [HttpPut]
-        [HttpOptions]
+        
         [Token]
-        public IHttpActionResult Update()
+        public IHttpActionResult Put()
         {
             try
             {

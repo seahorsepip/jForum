@@ -117,7 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\SectionControler.cs" />
+    <Compile Include="Controllers\SectionController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\TopicController.cs" />
     <Compile Include="Controllers\TokenController.cs" />
@@ -141,7 +141,6 @@
     <Compile Include="Logic\TopicRepository.cs" />
     <Compile Include="Logic\TokenRepository.cs" />
     <Compile Include="Logic\PostRepository.cs" />
-    <Compile Include="Logic\ValidateString.cs" />
     <Compile Include="Models\ForumModel.cs" />
     <Compile Include="Models\GroupModel.cs" />
     <Compile Include="Models\PagedModel.cs" />

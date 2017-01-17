@@ -10,7 +10,7 @@ namespace jForum.Models
     public class PostModel
     {
         public int Id { get; set; }
-        [Required, MinLength(10), MaxLength(200)]
+        [Required, MinLength(10), MaxLength(2000)]
         public string Content { get; set; }
         public UserModel User { get; set; }
         public Dictionary<int, PostModel> Quotes { get; set; }
