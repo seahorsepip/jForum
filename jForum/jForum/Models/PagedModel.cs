@@ -15,7 +15,7 @@ namespace jForum.Models
         public PagedModel(int start, int stop)
         {
             this.start = start;
-            this.stop = start < stop ? stop : start + 1;
+            this.stop = stop;
         }
 
         public int Start

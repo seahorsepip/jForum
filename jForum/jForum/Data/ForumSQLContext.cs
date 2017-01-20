@@ -57,7 +57,7 @@ namespace jForum.Data
             ForumModel forum = null;
             string query = @"SELECT [Forum].Name, [Forum].Description, [Section].Id, [Section].Title, [Section].Description
                              FROM [Forum]
-                             LEFT JOIN [Section] ON [Forum].Id = [Section].ForumId
+                             LEFT JOIN [Section] ON [Forum].Id = [Section].ForumId AND [Section].ParentSectionId IS NULL
                              WHERE [Forum].Id = @Id;";
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             using (SqlCommand cmd = new SqlCommand(query, conn))

@@ -70,7 +70,7 @@ namespace jForum.Data
 	                             WHERE [Topic].Id = @Id
 	                             ORDER BY [Post].Id
 	                             OFFSET (@Start + 1) ROWS
-	                             FETCH NEXT (@Stop - @Start - 1) ROWS ONLY
+	                             FETCH NEXT (@Stop - @Start) ROWS ONLY
                              ) b
                              ORDER BY PostId";
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))

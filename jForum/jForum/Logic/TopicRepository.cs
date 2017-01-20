@@ -24,8 +24,16 @@ namespace jForum.Logic
 
         public TopicModel Read(int id, PagedModel page)
         {
+            if(page.Start < 0)
+            {
+                throw new InvalidModelException("page.Start", "The Start field value must be greater then 0.");
+            }
+            if (page.Stop <= page.Start)
+            {
+                throw new InvalidModelException("page.Stop", "The Stop field value must be greater then Start field value.");
+            }
             TopicModel result = context.Read(id, page);
-            if(result != null && result.Posts.Count >= result.Posts.Start)
+            if(result != null)
             {
                 return result;
             }
